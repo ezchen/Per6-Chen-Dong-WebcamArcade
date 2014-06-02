@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 
@@ -52,9 +56,9 @@ public class Driver extends JFrame implements Runnable, WebcamPanel.Painter {
 	}
 
 	@Override
-	public void PaintPanel(WebcamPanel panel, Graphics2D g2) {
+	public void paintPanel(WebcamPanel panel, Graphics2D g2) {
 		if (painter != null) {
-			painter.painPanel(panel, g2);
+			painter.paintPanel(panel, g2);
 		}
 	}
 
