@@ -14,14 +14,16 @@ public class SetupScreen implements Screen {
 	private Ellipse2D.Double ellipse;
 	private RegionOfInterest ROI;
 	private BufferedImage savedImage;
+	private Driver driver;
 
 	private Webcam webcam;
 
 	private boolean buttonPressed;
 
-	public SetupScreen(Webcam webcam, WebcamPanel.Painter painter) {
+	public SetupScreen(Webcam webcam, WebcamPanel.Painter painter, Driver driver) {
 		this.webcam = webcam;
 		this.painter = painter;
+		this.driver = driver;
 		buttonPressed = false;
 
 		ROI = new RegionOfInterest(25, 50, 50); 
@@ -58,8 +60,6 @@ public class SetupScreen implements Screen {
 			image.flush();
 
 			g2.drawRect(ROI.getLeft(), ROI.getTop(), ROI.getSize(), ROI.getSize());
-			paintCircle(panel, image, g2);
-
 		}
 
 	}
@@ -79,6 +79,8 @@ public class SetupScreen implements Screen {
 			buttonPressed = true;
 			savedImage = webcam.getImage();
 			int[] colors = ROI.getAverageRGB(savedImage);
+			// driver.getScreens().pop();
+			// driver.getScreens().push(new MainScreen(webcam, painter, driver);
 			System.out.println(colors[0]);
 			System.out.println(colors[1]);
 			System.out.println(colors[2]);
