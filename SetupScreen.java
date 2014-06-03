@@ -41,7 +41,6 @@ public class SetupScreen implements Screen {
 		if (painter != null && savedImage == null) {
 			painter.paintImage(panel, image, g2);
 			paintCircle(panel, image, g2);
-			g2.drawImage(savedImage, null, 0, 0);
 		} else {
 			g2.drawImage(savedImage, null, 0, 0);
 		}
