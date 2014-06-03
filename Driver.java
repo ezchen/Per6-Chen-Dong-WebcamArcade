@@ -18,12 +18,29 @@ import java.util.Stack;
 
 import javax.swing.JFrame;
 
-public class Driver extends JFrame implements Runnable, WebcamPanel.Painter {
+public class Driver extends JFrame implements Runnable {
 
 	public class MyKeyAdapter extends KeyAdapter {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			screens.peek().keyPressed(e);
+		}
+	}
+
+	private class MyPainter implements WebcamPanel.Painter {
+
+		@Override
+		public void paintPanel(WebcamPanel panel, Graphics2D g2) {
+
+			g2.setColor(panel.getBackground());
+			g2.fillRect(0, 0, panel.getSize().width, panel.getSize().height);
+
+			screens.peek().paintPanel(panel, g2);
+		}
+
+		@Override
+		public void paintImage(WebcamPanel panel, BufferedImage image, Graphics2D g2) {
+			screens.peek().paintImage(panel, image, g2);
 		}
 	}
 
@@ -45,14 +62,13 @@ public class Driver extends JFrame implements Runnable, WebcamPanel.Painter {
 
 		WebcamPanel panel = new WebcamPanel(webcam, false);
 		panel.setPreferredSize(WebcamResolution.VGA.getSize());
-		panel.setPainter(this);
 		panel.setFPSLimited(true);
 		panel.setFPSDisplayed(true);
 		panel.setFPSLimit(20);
-		panel.setPainter(this);
+		panel.setPainter(new MyPainter());
 		panel.start();
 
-		painter = panel.getDefaultPainter();
+		painter = new MyPainter();
 		screens = new Stack<Screen>();
 		Screen setupScreen = new SetupScreen(webcam, painter);
 		screens.push(setupScreen);
@@ -80,23 +96,6 @@ public class Driver extends JFrame implements Runnable, WebcamPanel.Painter {
 			if (!screens.empty()) {
 				screens.peek().update();
 			}
-		}
-	}
-
-	@Override
-	public void paintPanel(WebcamPanel panel, Graphics2D g2) {
-		if (!screens.empty()) {
-			screens.peek().paintPanel(panel, g2);
-		}
-	}
-
-	@Override
-	public void paintImage(WebcamPanel panel, BufferedImage image, Graphics2D g2) {
-
-		// paint other stuff here with the different screens. The different screens 
-		// should also handle update methods (such as finger tracking)
-		if (!screens.empty()) {
-			screens.peek().paintImage(panel, image, g2);
 		}
 	}
 
