@@ -5,6 +5,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamPanel;
 import com.github.sarxos.webcam.WebcamResolution;
@@ -17,23 +20,28 @@ import javax.swing.JFrame;
 
 public class Driver extends JFrame implements Runnable, WebcamPanel.Painter {
 
+	public class MyKeyAdapter extends KeyAdapter {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			screens.peek().keyPressed(e);
+		}
+	}
+
 	private static final Executor EXECUTOR = Executors.newSingleThreadExecutor();
 
 	private Stack<Screen> screens;
 
 	private Webcam webcam;
-	private WebcamPanel.Painter painter = null;
+	private WebcamPanel.Painter painter;
 
 	public Driver() throws IOException {
 		super();
 
-		screens = new Stack<Screen>();
-		Screen setupScreen = new SetupScreen();
-		screens.push(setupScreen);
-
 		webcam = Webcam.getDefault();
 		webcam.setViewSize(WebcamResolution.VGA.getSize());
 		webcam.open(true);
+
+		addKeyListener(new MyKeyAdapter());
 
 		WebcamPanel panel = new WebcamPanel(webcam, false);
 		panel.setPreferredSize(WebcamResolution.VGA.getSize());
@@ -45,6 +53,9 @@ public class Driver extends JFrame implements Runnable, WebcamPanel.Painter {
 		panel.start();
 
 		painter = panel.getDefaultPainter();
+		screens = new Stack<Screen>();
+		Screen setupScreen = new SetupScreen(webcam, painter);
+		screens.push(setupScreen);
 
 		add(panel);
 
@@ -64,24 +75,23 @@ public class Driver extends JFrame implements Runnable, WebcamPanel.Painter {
 			if (!webcam.isOpen()) {
 				return;
 			}
+
+			// update the screen (handle all the logic)
+			if (!screens.empty()) {
+				screens.peek().update();
+			}
 		}
 	}
 
 	@Override
 	public void paintPanel(WebcamPanel panel, Graphics2D g2) {
-		if (painter != null) {
-			painter.paintPanel(panel, g2);
+		if (!screens.empty()) {
+			screens.peek().paintPanel(panel, g2);
 		}
 	}
 
 	@Override
 	public void paintImage(WebcamPanel panel, BufferedImage image, Graphics2D g2) {
-
-		// paints the Image to the background
-		// Note -- image is inverted because of the camera
-		if (painter != null) {
-			painter.paintImage(panel, image, g2);
-		}
 
 		// paint other stuff here with the different screens. The different screens 
 		// should also handle update methods (such as finger tracking)
