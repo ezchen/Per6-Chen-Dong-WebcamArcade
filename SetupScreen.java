@@ -12,6 +12,7 @@ public class SetupScreen implements Screen {
 
 	private WebcamPanel.Painter painter;
 	private Ellipse2D.Double ellipse;
+	private RegionOfInterest ROI;
 	private BufferedImage savedImage;
 
 	private Webcam webcam;
@@ -22,6 +23,8 @@ public class SetupScreen implements Screen {
 		this.webcam = webcam;
 		this.painter = painter;
 		buttonPressed = false;
+
+		ROI = new RegionOfInterest(25, 50, 50); 
 		ellipse = new Ellipse2D.Double();
 		ellipse.width = 25;
 		ellipse.height = 25;
@@ -30,19 +33,33 @@ public class SetupScreen implements Screen {
 	}
 
 	public void paintPanel(WebcamPanel panel, Graphics2D g2) {
-		if (painter != null && savedImage == null) {
-			painter.paintPanel(panel, g2);
-		}
+		int w1 = panel.getSize().width;
+		int h1 = panel.getSize().height;
+		int w2 = savedImage.getWidth(null);
+		int h2 = savedImage.getHeight(null);
+		g2.drawImage(savedImage, (w1 - w2) / 2, (h1 - h2) / 2, null);
+		paintCircle(panel, savedImage, g2);
+
+		System.out.println("press any button to confirm that this is the correct image");
 	}
 
 	public void paintImage(WebcamPanel panel, BufferedImage image, Graphics2D g2) {
 		// paints the Image to the background
 		// Note -- image is inverted because of the camera
-		if (painter != null && savedImage == null) {
-			painter.paintImage(panel, image, g2);
+		if (painter != null) {
+
+			int w1 = panel.getSize().width;
+			int h1 = panel.getSize().height;
+			int w2 = image.getWidth(null);
+			int h2 = image.getHeight(null);
+
+			g2.drawImage(image, (w1 - w2) / 2, (h1 - h2) / 2, null);
+
+			image.flush();
+
+			g2.drawRect(ROI.getLeft(), ROI.getTop(), ROI.getSize(), ROI.getSize());
 			paintCircle(panel, image, g2);
-		} else {
-			g2.drawImage(savedImage, null, 0, 0);
+
 		}
 
 	}
@@ -52,15 +69,21 @@ public class SetupScreen implements Screen {
 	public void update() {
 		if (savedImage == null && buttonPressed) {
 			System.out.println("image saved");
-			savedImage = webcam.getImage();
 		}
 	}
 
 	// Create the image which we will use to find the color
 	// of the finger
 	public void keyPressed(KeyEvent e) {
-		buttonPressed = true;
-		System.out.println("SetupScreen: Key pressed");
+		if (!buttonPressed) {
+			buttonPressed = true;
+			savedImage = webcam.getImage();
+			int[] colors = ROI.getAverageRGB(savedImage);
+			System.out.println(colors[0]);
+			System.out.println(colors[1]);
+			System.out.println(colors[2]);
+			System.out.println("SetupScreen: Key pressed");
+		}
 	}
 
 	public void paintCircle(WebcamPanel panel, BufferedImage image, Graphics2D g2) {
