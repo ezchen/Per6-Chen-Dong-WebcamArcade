@@ -6,6 +6,7 @@ public class MeanShift {
 	}
 
 	public int[] meanShift(int x, int y, int radius) {
+		return colors;
 	}
 
 	public static void main(String[] args) {
