@@ -55,6 +55,9 @@ public class Driver extends JFrame implements Runnable {
 		super();
 
 		webcam = Webcam.getDefault();
+		if (webcam == null) {
+			System.out.println("No webcam detected");
+		}
 		webcam.setViewSize(WebcamResolution.VGA.getSize());
 		webcam.open(true);
 
@@ -70,7 +73,7 @@ public class Driver extends JFrame implements Runnable {
 
 		painter = new MyPainter();
 		screens = new Stack<Screen>();
-		Screen setupScreen = new SetupScreen(webcam, painter);
+		Screen setupScreen = new SetupScreen(webcam, painter, this);
 		screens.push(setupScreen);
 
 		add(panel);

@@ -26,7 +26,7 @@ public class SetupScreen implements Screen {
 		this.driver = driver;
 		buttonPressed = false;
 
-		ROI = new RegionOfInterest(25, 50, 50); 
+		ROI = new RegionOfInterest(40, 20, 20); 
 		ellipse = new Ellipse2D.Double();
 		ellipse.width = 25;
 		ellipse.height = 25;
