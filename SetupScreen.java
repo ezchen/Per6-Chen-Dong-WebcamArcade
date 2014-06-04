@@ -20,6 +20,8 @@ public class SetupScreen implements Screen {
 
 	private boolean buttonPressed;
 
+	private ObjectTracker tracker;
+
 	public SetupScreen(Webcam webcam, WebcamPanel.Painter painter, Driver driver) {
 		this.webcam = webcam;
 		this.painter = painter;
@@ -60,6 +62,8 @@ public class SetupScreen implements Screen {
 			image.flush();
 
 			g2.drawRect(ROI.getLeft(), ROI.getTop(), ROI.getSize(), ROI.getSize());
+
+			test(tracker, panel, image, g2);
 		}
 
 	}
@@ -79,6 +83,7 @@ public class SetupScreen implements Screen {
 			buttonPressed = true;
 			savedImage = webcam.getImage();
 			int[] colors = ROI.getAverageRGB(savedImage);
+			tracker = new ObjectTracker(ROI, colors, 75);
 			// driver.getScreens().pop();
 			// driver.getScreens().push(new MainScreen(webcam, painter, driver);
 			System.out.println(colors[0]);
@@ -87,6 +92,13 @@ public class SetupScreen implements Screen {
 			System.out.println("SetupScreen: Key pressed");
 		}
 	}
+
+	public void test(ObjectTracker tracker, WebcamPanel panel, BufferedImage image, Graphics2D g2) {
+		if (tracker == null)
+			return;
+		
+		tracker.trackObject(image);
+	}	
 
 	public void paintCircle(WebcamPanel panel, BufferedImage image, Graphics2D g2) {
 		g2.draw(ellipse);

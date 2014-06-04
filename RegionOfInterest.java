@@ -21,7 +21,7 @@ public class RegionOfInterest {
 		int blue = 0;
 		for (int r = getTop(); r < size + getTop(); r++) {
 			for (int c = getLeft(); c < size + getLeft(); c++) {
-				rgb = image.getRGB(c, r);
+				rgb = image.getRGB(r, c);
 				red += (rgb >> 16) & 0xFF;
 				green += (rgb >> 8) & 0xFF;
 				blue += (rgb & 0xFF);
@@ -31,6 +31,14 @@ public class RegionOfInterest {
 		colors[1] = green/(size*size);
 		colors[2] = blue/(size*size);
 		return colors;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
 	}
 
 	public int getSize() {
