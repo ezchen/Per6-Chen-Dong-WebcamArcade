@@ -17,18 +17,20 @@ public class SetupScreen implements Screen {
 	private Driver driver;
 
 	private Webcam webcam;
+	private WebcamPanel panel;
 
 	private boolean buttonPressed;
 
 	private ObjectTracker tracker;
 
-	public SetupScreen(Webcam webcam, WebcamPanel.Painter painter, Driver driver) {
+	public SetupScreen(Webcam webcam, WebcamPanel panel, WebcamPanel.Painter painter, Driver driver) {
 		this.webcam = webcam;
 		this.painter = painter;
+		this.panel = panel;
 		this.driver = driver;
 		buttonPressed = false;
 
-		ROI = new RegionOfInterest(40, 20, 20); 
+		ROI = new RegionOfInterest(40, 250, 250); 
 		ellipse = new Ellipse2D.Double();
 		ellipse.width = 25;
 		ellipse.height = 25;
@@ -83,7 +85,7 @@ public class SetupScreen implements Screen {
 			buttonPressed = true;
 			savedImage = webcam.getImage();
 			int[] colors = ROI.getAverageRGB(savedImage);
-			tracker = new ObjectTracker(ROI, colors, 50);
+			tracker = new ObjectTracker(ROI, colors, 12, panel);
 			// driver.getScreens().pop();
 			// driver.getScreens().push(new MainScreen(webcam, painter, driver);
 			System.out.println(colors[0]);

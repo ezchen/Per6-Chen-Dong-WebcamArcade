@@ -73,7 +73,7 @@ public class Driver extends JFrame implements Runnable {
 
 		painter = new MyPainter();
 		screens = new Stack<Screen>();
-		Screen setupScreen = new SetupScreen(webcam, painter, this);
+		Screen setupScreen = new SetupScreen(webcam, panel, painter, this);
 		screens.push(setupScreen);
 
 		add(panel);

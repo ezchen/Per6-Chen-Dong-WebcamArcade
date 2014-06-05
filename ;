@@ -1,51 +1,38 @@
 import java.awt.image.BufferedImage;
 
-import com.github.sarxos.webcam.WebcamPanel;
-
-/*
- * Class used to track objects
- *
- * A huge amount of credit goes to this website
- * cmsoft.com
- *
- * After toying around with weighted means and trying to figure out a nice way to describe the weighted mean
- * of a pixel I used his equation to find the weight of a pixel -- exp(-k*Distance(colorTracked, colorPixel))
- */
 public class ObjectTracker {
 	private RegionOfInterest ROI;
 	private int[] colors;
-	private WebcamPanel panel;
-	private double k;
+	private int threshold;
 
-	public ObjectTracker(RegionOfInterest ROI, int[] rgb, double k, WebcamPanel panel) {
+	public ObjectTracker(RegionOfInterest ROI, int[] rgb, int threshold) {
 		this.ROI = ROI;
-		this.panel = panel;
-		this.k = k;
+		this.threshold = threshold;
 		colors = rgb;
 	}
 
 	public void trackObject(BufferedImage image) {
 		// take the average position of all the pixels that
 		// are close enough to the colors array in this class
-		double x = 0;
-		double y = 0;
-		double weight = 0;
+		int x = 0;
+		int y = 0;
+		int weight = 0;
 		// compute the weighted mean of the all the points in the region of interest
 		for (int r = ROI.getTop(); r < ROI.getSize() + ROI.getTop(); r++) {
 			for (int c = ROI.getLeft(); c < ROI.getSize() + ROI.getLeft(); c++) {
-				double pWeight = pixelWeight(image.getRGB(c, r));
-				y += (r * pWeight);
-				x += (c * pWeight);
+				int pWeight = pixelWeight(image.getRGB(r, c));
+				y += (r * weight);
+				x += (c * weight);
 				weight += pWeight;
 			}
 		}
 
-		if (x/weight - ROI.getSize() > 0 && x/weight + ROI.getSize() < panel.getWidth()) {
-			ROI.setX((int)(x/weight));
+		if (x/counter - ROI.getSize()/2 > 0) {
+			ROI.setX(x/weight);
 			System.out.println("changing x");
 		}
-		if (y/weight - ROI.getSize() > 0 && y/weight + ROI.getSize() < panel.getHeight()) {
-			ROI.setY((int)(y/weight));
+		if (y/counter - ROI.getSize()/2 > 0) {
+			ROI.setY(y/weight);
 			System.out.println("changing y");
 		}
 
