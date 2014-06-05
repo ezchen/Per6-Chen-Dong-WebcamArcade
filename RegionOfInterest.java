@@ -59,7 +59,7 @@ public class RegionOfInterest {
 
 	// y coordinate of the top of the box
 	public int getTop() {
-		return (size/2 + y);
+		return (y - size/2);
 	}
 
 	// x coordinate of the top of the box

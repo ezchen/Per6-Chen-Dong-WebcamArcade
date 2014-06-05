@@ -83,7 +83,7 @@ public class SetupScreen implements Screen {
 			buttonPressed = true;
 			savedImage = webcam.getImage();
 			int[] colors = ROI.getAverageRGB(savedImage);
-			tracker = new ObjectTracker(ROI, colors, 75);
+			tracker = new ObjectTracker(ROI, colors, 50);
 			// driver.getScreens().pop();
 			// driver.getScreens().push(new MainScreen(webcam, painter, driver);
 			System.out.println(colors[0]);

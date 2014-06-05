@@ -26,29 +26,34 @@ public class ObjectTracker {
 				}
 			}
 		}
-		if (counter == 0) {
+
+		if (counter < 500) {
 			System.out.println("lost object");
 		} else {
-			ROI.setX(x/counter);
-			ROI.setY(y/counter);
+			System.out.println(x/counter);
+			System.out.println(y/counter);
+			if (x/counter - ROI.getSize()/2 > 0) {
+				ROI.setX(x/counter);
+				System.out.println("changing x");
+			}
+			if (y/counter - ROI.getSize()/2 > 0) {
+				ROI.setY(y/counter);
+				System.out.println("changing y");
+			}
 		}
 
 		System.out.println(ROI);
 	}
 
-	public void isPixel(int rgb) {
+	public boolean isPixel(int rgb) {
 		int red = (rgb >> 16) & 0xFF;
 		int green = (rgb >> 8) & 0xFF;
 		int blue = (rgb & 0xFF);
 
 		// should be the difference of the individual ones
-		int difference = Math.abs(red - colors[0]) +
-			Math.abs(green - colors[1]) +
-		   	Math.abs(blue - colors[2]);
-
-		if (difference > threshold * 3) {
+		if (Math.abs(red - colors[0]) > threshold || Math.abs(green - colors[1]) > threshold || Math.abs(blue - colors[2]) > threshold) {
 			return false;
-		}
+		}	
 
 		return true;
 	}
