@@ -86,12 +86,15 @@ public class SetupScreen implements Screen {
 			savedImage = webcam.getImage();
 			int[] colors = ROI.getAverageRGB(savedImage);
 			tracker = new ObjectTracker(ROI, colors, 12, panel);
-			// driver.getScreens().pop();
-			// driver.getScreens().push(new MainScreen(webcam, painter, driver);
 			System.out.println(colors[0]);
 			System.out.println(colors[1]);
 			System.out.println(colors[2]);
 			System.out.println("SetupScreen: Key pressed");
+		} else {
+			System.out.println("SetupScreen: Second button pressed");
+			driver.getScreens().pop();
+			driver.getScreens().push(new SetupScreen(webcam, panel, painter, driver));
+			driver.getScreens().push(new DrawScreen(webcam, panel, painter, driver, tracker));
 		}
 	}
 

@@ -86,6 +86,10 @@ public class Driver extends JFrame implements Runnable {
 
 		EXECUTOR.execute(this);
 	}
+
+	public Stack<Screen> getScreens() {
+		return screens;
+	}
 	
 	@Override
 	public void run() {

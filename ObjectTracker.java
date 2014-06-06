@@ -42,11 +42,9 @@ public class ObjectTracker {
 
 		if (x/weight - ROI.getSize() > 0 && x/weight + ROI.getSize() < panel.getWidth()) {
 			ROI.setX((int)(x/weight));
-			System.out.println("changing x");
 		}
 		if (y/weight - ROI.getSize() > 0 && y/weight + ROI.getSize() < panel.getHeight()) {
 			ROI.setY((int)(y/weight));
-			System.out.println("changing y");
 		}
 
 		System.out.println(ROI);
