@@ -67,4 +67,8 @@ public class ObjectTracker {
 
 		return Math.exp(-(k*Math.pow(pixelDistance(rgb),2)));
 	}
+
+	public RegionOfInterest getROI() {
+		return ROI;
+	}
 }
