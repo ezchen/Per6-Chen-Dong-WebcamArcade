@@ -64,8 +64,6 @@ public class SetupScreen implements Screen {
 			image.flush();
 
 			g2.drawRect(ROI.getLeft(), ROI.getTop(), ROI.getSize(), ROI.getSize());
-
-			test(tracker, panel, image, g2);
 		}
 
 	}
@@ -86,24 +84,26 @@ public class SetupScreen implements Screen {
 			savedImage = webcam.getImage();
 			int[] colors = ROI.getAverageRGB(savedImage);
 			tracker = new ObjectTracker(ROI, colors, 12, panel);
-			System.out.println(colors[0]);
-			System.out.println(colors[1]);
-			System.out.println(colors[2]);
 			System.out.println("SetupScreen: Key pressed");
+			System.out.println("ROI: " + colors[0] + "," + colors[1] + "," + colors[2]);
 		} else {
-			System.out.println("SetupScreen: Second button pressed");
 			driver.getScreens().pop();
 			driver.getScreens().push(new SetupScreen(webcam, panel, painter, driver));
-			driver.getScreens().push(new DrawScreen(webcam, panel, painter, driver, tracker));
+
+			int keyCode = e.getKeyCode();
+			switch(keyCode) { 
+				// Enter DrawScreen
+				case KeyEvent.VK_D:
+					System.out.println("SetupScreen: 'D' pressed; entering DrawScreen");
+					driver.getScreens().push(new DrawScreen(webcam, panel, painter, driver, tracker));
+					break;
+				// Enter PongScreen
+				case KeyEvent.VK_P:
+					System.out.println("SetupScreen: 'P' pressed; entering PongScreen");
+					break;
+			}
 		}
 	}
-
-	public void test(ObjectTracker tracker, WebcamPanel panel, BufferedImage image, Graphics2D g2) {
-		if (tracker == null)
-			return;
-		
-		tracker.trackObject(image);
-	}	
 
 	public void paintCircle(WebcamPanel panel, BufferedImage image, Graphics2D g2) {
 		g2.draw(ellipse);

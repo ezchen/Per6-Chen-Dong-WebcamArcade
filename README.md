@@ -4,15 +4,25 @@ Webcam-Arcade
 Games that involve image processing through the webcam
 
 Instructions
+\- Compile using "javac -cp .:libs/\* \*.java" or "javac -cp .;libs/\* \*.java" on Windows machines
 
-\- Compile using javac -cp .:libs/\* \*.java
-\- Get a color that you wish to track, preferably a light source and cover the entire square in the center. Press any button to begin tracking this color
-\- Press any button to enter draw Screen (update this junhao)
+\- Run the program with "java -cp .:libs/\* Driver" or "java -cp .;libs/\* Driver"
+
+\- Get a distinct color that you wish to track, preferably a light source and cover the entire square in the center. Press any button to begin tracking this color
+
+\- Press **D** to enter the Draw Screen
+
+\- Press **P** to enter the Pong Screen
 
 Drawing
+\- Once you enter the draw screen, press any key besides 'z' and 'r' to draw a rectangle
 
-\- once you enter the draw screen, press any button besides z and to draw a rectangle
-\- draw screen supports undo and redo. Press **z** for undo and **r** for redo
+\- Draw screen supports undo and redo. Press **z** to undo and **r** to redo
+
+Pong
+\- 
+
+\-
 
 
 Algorithms, DataStructures, etc...
@@ -35,15 +45,15 @@ DrawScreen - Allows the user to draw
 PongScreen - Pong!
 
 Mean Shift Algorithm
-
 \- Separate colors into RGB (red green blue)
+
 \- Find the weighted mean of all the colors in a Rectangle, then move to that mean
-	\- The weight is given by w = exp(-k*Distance(colorTracked, colorPixel)^2)
+
+	\- The weight is given by w = e^(-k*Distance(colorTracked, colorPixel)^2)
+
 	\- Credits to cmsoft.com for this weighted pixel equation
 
-Undo/Redo
-
+Undo/Redo in DrawScreen
 \- All commands are added to the end of the linkedlist (like a stack, but we need to iterate through the list to draw the rectangles)
+
 \- Any undo commands are pushed onto a redo stack
-
-

@@ -66,8 +66,8 @@ public class Driver extends JFrame implements Runnable {
 		WebcamPanel panel = new WebcamPanel(webcam, false);
 		panel.setPreferredSize(WebcamResolution.VGA.getSize());
 		panel.setFPSLimited(true);
+		panel.setFPSLimit(60);
 		panel.setFPSDisplayed(true);
-		panel.setFPSLimit(20);
 		panel.setPainter(new MyPainter());
 		panel.start();
 

@@ -9,12 +9,13 @@ import com.github.sarxos.webcam.WebcamPanel;
  * cmsoft.com
  *
  * After toying around with weighted means and trying to figure out a nice way to describe the weighted mean
- * of a pixel I used his equation to find the weight of a pixel -- exp(-k*Distance(colorTracked, colorPixel))
+ * of a pixel I used his equation to find the weight of a pixel: e^(-k*Distance(colorTracked, colorPixel)^2),
  */
 public class ObjectTracker {
 	private RegionOfInterest ROI;
 	private int[] colors;
 	private WebcamPanel panel;
+	// k is the threshold of error between the given pixel and the tracked pixel
 	private double k;
 
 	public ObjectTracker(RegionOfInterest ROI, int[] rgb, double k, WebcamPanel panel) {
@@ -47,7 +48,7 @@ public class ObjectTracker {
 			ROI.setY((int)(y/weight));
 		}
 
-		System.out.println(ROI);
+		// For testing purposes: System.out.println(ROI);
 	}
 
 	public int pixelDistance(int rgb) {
