@@ -102,7 +102,7 @@ public class SetupScreen implements Screen {
 				// If P is pressed
 				case KeyEvent.VK_P:
 					System.out.println("SetupScreen: 'P' pressed; Entering PongScreen");
-					// driver.getScreens().push(new DrawScreen(webcam, panel, painter, driver, tracker));
+					driver.getScreens().push(new PongScreen(webcam, panel, painter, driver, tracker));
 					break;
 			}
 		}
