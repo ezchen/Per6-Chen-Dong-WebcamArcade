@@ -5,21 +5,23 @@ Games that involve image processing through the webcam.
 ## Instructions
 - Compile using "javac -cp .:libs/\* \*.java" or "javac -cp .;libs/\* \*.java" on Windows machines
 - Run the program with "java -cp .:libs/\* Driver" or "java -cp .;libs/\* Driver"
+  - It is expected for terminal to default to a no-operation implementation
 - Get a distinct color that you wish to track, preferably a light source and cover the entire square in the center. Press any button to begin tracking this color
-- Press **D** to enter the Draw Screen
-- Press **P** to enter the Pong Screen
+  - You may press any key besides the following keys to track a new color
+- Switch between screens with the following keys:
+  - Press **S** to enter the Setup Screen (Default Screen)
+  - Press **D** to enter the Draw Screen
+  - Press **P** to enter the Pong Screen
 
 __Drawing__
 - Once you enter the draw screen, press any key besides 'z' and 'r' to draw a rectangle
 - Draw screen supports undo and redo. Press __z__ to undo and __r__ to redo
 
 __Pong__
-- stuff
-- will be added
-- later
+- 
 
 
-## Algorithms, Data Structures, etc...
+## Classes, Algorithms, Data Structures, etc...
 
 #### Hierarchy and Class Descriptions
 
@@ -42,13 +44,15 @@ __DrawScreen__
 - Contains a LinkedList of history of commands and a Stack of optional redo commands
 
 __PongScreen__
-- Pong!
+- Classic Pong game
+
+#### Algorithms
 
 __Mean Shift Algorithm__
 - Separate colors into RGB (red green blue)
 - Find the weighted mean of all the colors in a Rectangle, then move to that mean
   - The weight is given by w = e^(-k*Distance(colorTracked, colorPixel)^2)
-  - Credits to cmsoft.com for this weighted pixel equation
+  - Credits to cmsoft.com and its color tracking case study
 
 __Undo/Redo in DrawScreen__
 - All commands are added to the end of the linkedlist (like a stack, but we need to iterate through the list to draw the rectangles)

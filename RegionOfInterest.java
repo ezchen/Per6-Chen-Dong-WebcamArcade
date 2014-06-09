@@ -1,16 +1,18 @@
 import java.awt.image.BufferedImage;
+
+// ROI is in the shape of a square
 public class RegionOfInterest {
 	private int x;
 	private int y;
-	private int size;
+	private int sideLength;
 	private int[][] pixels;
 	private int[] colors;
 
-	public RegionOfInterest(int size, int x, int y) {
-		this.size = size;
+	public RegionOfInterest(int sideLength, int x, int y) {
+		this.sideLength = sideLength;
 		this.x = x;
 		this.y = y;
-		int[][] pixels = new int[size][size];
+		int[][] pixels = new int[sideLength][sideLength];
 		colors = new int[3];
 	}
 
@@ -19,17 +21,17 @@ public class RegionOfInterest {
 		int red = 0;
 		int green = 0;
 		int blue = 0;
-		for (int r = getTop(); r < size + getTop(); r++) {
-			for (int c = getLeft(); c < size + getLeft(); c++) {
+		for (int r = getTop(); r < sideLength + getTop(); r++) {
+			for (int c = getLeft(); c < sideLength + getLeft(); c++) {
 				rgb = image.getRGB(r, c);
 				red += (rgb >> 16) & 0xFF;
 				green += (rgb >> 8) & 0xFF;
 				blue += (rgb & 0xFF);
 			}
 		}
-		colors[0] = red/(size*size);
-		colors[1] = green/(size*size);
-		colors[2] = blue/(size*size);
+		colors[0] = red/(sideLength*sideLength);
+		colors[1] = green/(sideLength*sideLength);
+		colors[2] = blue/(sideLength*sideLength);
 		return colors;
 	}
 
@@ -42,7 +44,7 @@ public class RegionOfInterest {
 	}
 
 	public int getSize() {
-		return size;
+		return sideLength;
 	}
 
 	public int[][] getPixels() {
@@ -59,12 +61,12 @@ public class RegionOfInterest {
 
 	// y coordinate of the top of the box
 	public int getTop() {
-		return (y - size/2);
+		return (y - sideLength/2);
 	}
 
 	// x coordinate of the top of the box
 	public int getLeft() {
-		return (x - size/2);
+		return (x - sideLength/2);
 	}
 
 	public String toString() {

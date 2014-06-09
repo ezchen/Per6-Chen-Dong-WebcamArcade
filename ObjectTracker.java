@@ -47,8 +47,6 @@ public class ObjectTracker {
 		if (y/weight - ROI.getSize() > 0 && y/weight + ROI.getSize() < panel.getHeight()) {
 			ROI.setY((int)(y/weight));
 		}
-
-		// For testing purposes: System.out.println(ROI);
 	}
 
 	public int pixelDistance(int rgb) {

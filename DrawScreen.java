@@ -29,16 +29,6 @@ public class DrawScreen implements Screen {
 	private LinkedList<Rectangle> paint;
 	private Stack<Rectangle> redo;
 
-	public DrawScreen(Webcam webcam, WebcamPanel panel, WebcamPanel.Painter painter, Driver driver, RegionOfInterest ROI) {
-		this.webcam = webcam;
-		this.panel = panel;
-		this.driver = driver;
-		this.painter = painter;
-
-		buttonPressed = false;
-		this.ROI = ROI;
-	}
-
 	public DrawScreen(Webcam webcam, WebcamPanel panel, WebcamPanel.Painter painter, Driver driver, ObjectTracker tracker) {
 		this.webcam = webcam;
 		this.panel = panel;
@@ -89,19 +79,30 @@ public class DrawScreen implements Screen {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		int key = e.getKeyCode();
+		int keyCode = e.getKeyCode();
 
-		if (key == KeyEvent.VK_Z) {
-			undo(5);
-		} else if (key == KeyEvent.VK_R) {
-			redo(5);
-		} else {
-			// find the position of the rectangle to be drawn
-			int y = ROI.getTop();
-			int x = ROI.getLeft();
-			int size = ROI.getSize();
+		switch(keyCode) {
+			case KeyEvent.VK_Z:
+				undo(5);
+				break;
+			case KeyEvent.VK_R:
+				redo(5);
+				break;
+			case KeyEvent.VK_P:
+				System.out.println("DrawScreen: 'P' pressed; Entering PongScreen");
+				driver.getScreens().pop();
+				// driver.getScreens().push(new DrawScreen(webcam, panel, painter, driver, tracker));
+				break;
+			case KeyEvent.VK_S:
+				System.out.println("DrawScreen: 'S' pressed. Entering SetupScreen");
+				driver.getScreens().pop();
+			default:
+				int y = ROI.getTop();
+				int x = ROI.getLeft();
+				int size = ROI.getSize();
 
-			addRectangle(size, size, x, y);
+				addRectangle(size,size,x,y);
+				break;
 		}
 	}
 

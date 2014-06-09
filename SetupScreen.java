@@ -67,7 +67,6 @@ public class SetupScreen implements Screen {
 
 			g2.drawRect(ROI.getLeft(), ROI.getTop(), ROI.getSize(), ROI.getSize());
 		}
-
 	}
 
 	// Should move to another screen once we capture the
@@ -80,29 +79,30 @@ public class SetupScreen implements Screen {
 	}
 
 	// Create the image which we will use to find the color
-	// of the finger and allows the user to switch to the next screen
+	// of the object being tracked and allows the user to switch to the next screen
 	public void keyPressed(KeyEvent e) {
 		if (!buttonPressed) {
 			buttonPressed = true;
 			savedImage = webcam.getImage();
 			int[] colors = ROI.getAverageRGB(savedImage);
 			tracker = new ObjectTracker(ROI, colors, 12, panel);
-			System.out.println("SetupScreen: Key pressed");
+			System.out.println("SetupScreen: Key pressed; Image saved");
 			System.out.println("ROI: " + colors[0] + "," + colors[1] + "," + colors[2]);
 		} else {
 			driver.getScreens().pop();
 			driver.getScreens().push(new SetupScreen(webcam, panel, painter, driver));
 
 			int keyCode = e.getKeyCode();
-			switch(keyCode) { 
-				// Enter DrawScreen
+			switch(keyCode) {
+				// If D is pressed
 				case KeyEvent.VK_D:
-					System.out.println("SetupScreen: 'D' pressed; entering DrawScreen");
+					System.out.println("SetupScreen: 'D' pressed; Entering DrawScreen");
 					driver.getScreens().push(new DrawScreen(webcam, panel, painter, driver, tracker));
 					break;
-				// Enter PongScreen
+				// If P is pressed
 				case KeyEvent.VK_P:
-					System.out.println("SetupScreen: 'P' pressed; entering PongScreen");
+					System.out.println("SetupScreen: 'P' pressed; Entering PongScreen");
+					// driver.getScreens().push(new DrawScreen(webcam, panel, painter, driver, tracker));
 					break;
 			}
 		}
