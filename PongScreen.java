@@ -1,80 +1,127 @@
-import 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
-public class PongScreen implements Screen{
-	private RegionOfInterest ROI;
+import java.awt.event.KeyEvent;
+
+import java.util.Stack;
+
+import com.github.sarxos.webcam.WebcamPanel;
+import com.github.sarxos.webcam.Webcam;
+
+public class PongScreen implements Screen {
+	
+	private WebcamPanel.Painter painter;
+	
 	private Driver driver;
-	private BufferedImage savedImage;
-	private Rectangle paddle;
 
 	private Webcam webcam;
 	private WebcamPanel panel;
-	private WebcamPanel.Painter painter;
 
-	public PongScreen(Webcam webcam, WebcamPanel panel, WebcamPanel.Painter painter, Driver driver){
+	private boolean buttonPressed;
+
+	private ObjectTracker tracker;
+
+	private int movement;
+	private Ball ball;
+	private Paddle paddle;
+	private PaddleAI ai;
+
+	public PongScreen(Webcam webcam, WebcamPanel panel, WebcamPanel.Painter painter, Driver driver, ObjectTracker tracker) {
 		this.webcam = webcam;
 		this.panel = panel;
 		this.painter = painter;
 		this.driver = driver;
 
-		ROI = new RegionOfInterest(40, 250, 250); 
-		paddle = new Rectangle(25,25);
+		buttonPressed = false;
+		this.tracker = tracker;
+
+		ball = new Ball(100,40,20,20);
+		ball.setSpeed(6);
+
+		player = new Paddle(0,0,60,10);
+        player.setSpeed(7);
+        ai=new AIPaddle(width,0,5.5,width,height);
 	}
 
-	public void paintPanel(WebcamPanel panel, Graphics2D g2) {
-		g2.drawImage(savedImage, (w1 - w2) / 2, (h1 - h2) / 2, null);
-		paintCircle(panel, savedImage, g2);
-
-		System.out.println("press any button to confirm that this is the correct image");
-	}
+	public void paintPanel(WebcamPanel panel, Graphics2D g2){}
 
 	public void paintImage(WebcamPanel panel, BufferedImage image, Graphics2D g2) {
-		// paints the Image to the background
-		// Note -- image is inverted because of the camera
 		if (painter != null) {
+			int pWidth = panel.getSize().width;
+			int pHeight = panel.getSize().height;
+			int iWidth = -image.getWidth(null); // Flips the image along y axis
+			int iHeight = image.getHeight(null);
 
-			int w1 = panel.getSize().width;
-			int h1 = panel.getSize().height;
-			int w2 = image.getWidth(null);
-			int h2 = image.getHeight(null);
-
-			g2.drawImage(image, (w1 - w2) / 2, (h1 - h2) / 2, null);
+			g2.drawImage(image, (pWidth - iWidth) / 2, (pHeight - iHeight) / 2, iWidth, iHeight , null);
 
 			image.flush();
 
+			// draw the object tracker's bounds
+			g2.setPaint(Color.red);
 			g2.drawRect(ROI.getLeft(), ROI.getTop(), ROI.getSize(), ROI.getSize());
 
-			test(tracker, panel, image, g2);
+			tracker.trackObject(image);
+
+			// draw the rectangles
+			drawRectangles(g2);
 		}
 	}
 
-	// Should move to another screen once we capture the
-	// color the user wants to use to track the data
 	public void update() {
-		if (savedImage == null && buttonPressed) {
-			System.out.println("image saved");
+	}
+
+	public void drawRectangles(Graphics2D g2) {
+		// Iterate through all of the rectangles and draw them
+		g2.setPaint(Color.gray);
+		for (Rectangle rect : paint) {
+			g2.fill(rect);
 		}
 	}
 
-	// Create the image which we will use to find the color
-	// of the finger
 	public void keyPressed(KeyEvent e) {
-		if (!buttonPressed) {
-			buttonPressed = true;
-			savedImage = webcam.getImage();
-			int[] colors = ROI.getAverageRGB(savedImage);
-			tracker = new ObjectTracker(ROI, colors, 12, panel);
-			// driver.getScreens().pop();
-			// driver.getScreens().push(new MainScreen(webcam, painter, driver);
-			System.out.println(colors[0]);
-			System.out.println(colors[1]);
-			System.out.println(colors[2]);
-			System.out.println("SetupScreen: Key pressed");
+		int keyCode = e.getKeyCode();
+
+		switch(keyCode) {
+			case KeyEvent.VK_Z:
+				undo(5);
+				break;
+			case KeyEvent.VK_R:
+				redo(5);
+				break;
+			case KeyEvent.VK_P:
+				System.out.println("DrawScreen: 'P' pressed; Entering PongScreen");
+				driver.getScreens().pop();
+				// driver.getScreens().push(new DrawScreen(webcam, panel, painter, driver, tracker));
+				break;
+			case KeyEvent.VK_S:
+				System.out.println("DrawScreen: 'S' pressed. Entering SetupScreen");
+				driver.getScreens().pop();
+			default:
+				int y = ROI.getTop();
+				int x = ROI.getLeft();
+				int size = ROI.getSize();
+
+				addRectangle(size,size,x,y);
+				break;
 		}
 	}
 
-	/*
-		Rebound angle will depend on the angle of collision and the velocity of the paddle at the time of the collision 
-		i.e. moving the paddle to the left while hitting the ball will make the ball move more towards the left
-		(vector addition)
-	*/
+	public void addRectangle(int height, int width, int x, int y) {
+		Rectangle rectangle = new Rectangle(x, y, width, height);
+		paint.push(rectangle);
+		System.out.println(rectangle);
+		System.out.println("Rectangle Added");
+	}
+
+	public void undo(int iterations) {
+		if (paint.size() > 0) {
+			redo.push(paint.pop());
+		}
+	}
+
+	public void redo(int iterations) {
+		if (!redo.empty()) {
+			paint.push(redo.pop());
+		}
+	}
 }
