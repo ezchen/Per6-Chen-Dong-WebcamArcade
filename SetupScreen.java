@@ -1,5 +1,7 @@
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 
 import java.awt.event.KeyEvent;
 
@@ -39,11 +41,12 @@ public class SetupScreen implements Screen {
 	}
 
 	public void paintPanel(WebcamPanel panel, Graphics2D g2) {
-		int w1 = panel.getSize().width;
-		int h1 = panel.getSize().height;
-		int w2 = savedImage.getWidth(null);
-		int h2 = savedImage.getHeight(null);
-		g2.drawImage(savedImage, (w1 - w2) / 2, (h1 - h2) / 2, null);
+		int pWidth = panel.getSize().width;
+		int pHeight = panel.getSize().height;
+		int iWidth = savedImage.getWidth(null);
+		int iHeight = savedImage.getHeight(null);
+
+		g2.drawImage(savedImage, (pWidth - iWidth) / 2, (pHeight - iHeight) / 2, null);
 		paintCircle(panel, savedImage, g2);
 
 		System.out.println("press any button to confirm that this is the correct image");
@@ -51,15 +54,14 @@ public class SetupScreen implements Screen {
 
 	public void paintImage(WebcamPanel panel, BufferedImage image, Graphics2D g2) {
 		// paints the Image to the background
-		// Note -- image is inverted because of the camera
 		if (painter != null) {
 
-			int w1 = panel.getSize().width;
-			int h1 = panel.getSize().height;
-			int w2 = image.getWidth(null);
-			int h2 = image.getHeight(null);
+			int pWidth = panel.getSize().width;
+			int pHeight = panel.getSize().height;
+			int iWidth = -image.getWidth(null); // Flips the image along y axis
+			int iHeight = image.getHeight(null);
 
-			g2.drawImage(image, (w1 - w2) / 2, (h1 - h2) / 2, null);
+			g2.drawImage(image, (pWidth - iWidth) / 2, (pHeight - iHeight) / 2, iWidth, iHeight , null);
 
 			image.flush();
 
@@ -74,10 +76,11 @@ public class SetupScreen implements Screen {
 		if (savedImage == null && buttonPressed) {
 			System.out.println("image saved");
 		}
+
 	}
 
 	// Create the image which we will use to find the color
-	// of the finger
+	// of the finger and allows the user to switch to the next screen
 	public void keyPressed(KeyEvent e) {
 		if (!buttonPressed) {
 			buttonPressed = true;

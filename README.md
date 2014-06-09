@@ -3,20 +3,20 @@
 Games that involve image processing through the webcam.
 
 ## Instructions
-* Compile using "javac -cp .:libs/\* \*.java" or "javac -cp .;libs/\* \*.java" on Windows machines
-* Run the program with "java -cp .:libs/\* Driver" or "java -cp .;libs/\* Driver"
-* Get a distinct color that you wish to track, preferably a light source and cover the entire square in the center. Press any button to begin tracking this color
-* Press **D** to enter the Draw Screen
-* Press **P** to enter the Pong Screen
+- Compile using "javac -cp .:libs/\* \*.java" or "javac -cp .;libs/\* \*.java" on Windows machines
+- Run the program with "java -cp .:libs/\* Driver" or "java -cp .;libs/\* Driver"
+- Get a distinct color that you wish to track, preferably a light source and cover the entire square in the center. Press any button to begin tracking this color
+- Press **D** to enter the Draw Screen
+- Press **P** to enter the Pong Screen
 
 __Drawing__
-* Once you enter the draw screen, press any key besides 'z' and 'r' to draw a rectangle
-* Draw screen supports undo and redo. Press __z__ to undo and __r__ to redo
+- Once you enter the draw screen, press any key besides 'z' and 'r' to draw a rectangle
+- Draw screen supports undo and redo. Press __z__ to undo and __r__ to redo
 
 __Pong__
-* stuff
-* will be added
-* later
+- stuff
+- will be added
+- later
 
 
 ## Algorithms, Data Structures, etc...
@@ -27,7 +27,7 @@ __Driver__
 - Entrance to the program
 - Creates The WebcamPanel, SetupScreen, etc...
 - Has a stack of screens
-..- peek() the top of the stack and pass down the method paintImage(), which is like a while loop (more like a thread that is constantly updated in the WebcamPanel)
+  - peek() the top of the stack and pass down the method paintImage(), which is like a while loop (more like a thread that is constantly updated in the WebcamPanel)
 
 __Screen__
 - Interface
@@ -47,8 +47,8 @@ __PongScreen__
 __Mean Shift Algorithm__
 - Separate colors into RGB (red green blue)
 - Find the weighted mean of all the colors in a Rectangle, then move to that mean
-..- The weight is given by w = e^(-k*Distance(colorTracked, colorPixel)^2)
-..- Credits to cmsoft.com for this weighted pixel equation
+  - The weight is given by w = e^(-k*Distance(colorTracked, colorPixel)^2)
+  - Credits to cmsoft.com for this weighted pixel equation
 
 __Undo/Redo in DrawScreen__
 - All commands are added to the end of the linkedlist (like a stack, but we need to iterate through the list to draw the rectangles)

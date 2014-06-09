@@ -57,12 +57,12 @@ public class DrawScreen implements Screen {
 
 	public void paintImage(WebcamPanel panel, BufferedImage image, Graphics2D g2) {
 		if (painter != null) {
-			int w1 = panel.getSize().width;
-			int h1 = panel.getSize().height;
-			int w2 = image.getWidth(null);
-			int h2 = image.getHeight(null);
+			int pWidth = panel.getSize().width;
+			int pHeight = panel.getSize().height;
+			int iWidth = -image.getWidth(null); // Flips the image along y axis
+			int iHeight = image.getHeight(null);
 
-			g2.drawImage(image, (w1 - w2) / 2, (h1 - h2) / 2, null);
+			g2.drawImage(image, (pWidth - iWidth) / 2, (pHeight - iHeight) / 2, iWidth, iHeight , null);
 
 			image.flush();
 

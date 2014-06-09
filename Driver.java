@@ -57,7 +57,9 @@ public class Driver extends JFrame implements Runnable {
 		webcam = Webcam.getDefault();
 		if (webcam == null) {
 			System.out.println("No webcam detected");
+			return;
 		}
+
 		webcam.setViewSize(WebcamResolution.VGA.getSize());
 		webcam.open(true);
 
